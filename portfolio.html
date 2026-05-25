@@ -1,0 +1,1825 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-mode="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Victoria Peixoto Bicudo — Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    /* ═══════════════════════════════════════════
+       TOKENS
+    ═══════════════════════════════════════════ */
+    :root {
+      --wine:       #670527;
+      --wine-light: #8a0635;
+      --sage:       #bbd798;
+      --sage-light: #d6ecc3;
+      --sage-dark:  #8faf6a;
+      --dark:       #0f0f0f;
+      --gray:       #6b6b6b;
+      --gray-light: #e8e8e4;
+
+      /* Light mode surfaces */
+      --bg:         #fafaf8;
+      --surface:    #ffffff;
+      --text:       #0f0f0f;
+      --text-muted: #6b6b6b;
+      --border:     #e8e8e4;
+    }
+    [data-mode="light"] {
+      --bg:         #fafaf8;
+      --surface:    #ffffff;
+      --text:       #0f0f0f;
+      --text-muted: #6b6b6b;
+      --border:     #e8e8e4;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+      cursor: none;
+      transition: background 0.4s, color 0.4s;
+    }
+
+    /* ═══════════════════════════════════════════
+       CURSOR MAGNÉTICO
+    ═══════════════════════════════════════════ */
+    #cursor-dot {
+      position: fixed;
+      top: 0; left: 0;
+      width: 10px; height: 10px;
+      background: var(--wine);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      will-change: left, top;
+      transition: width 0.3s cubic-bezier(0.16,1,0.3,1),
+                  height 0.3s cubic-bezier(0.16,1,0.3,1),
+                  background 0.3s,
+                  border-radius 0.3s,
+                  opacity 0.3s;
+      mix-blend-mode: multiply;
+    }
+    /* quando está sobre fundo escuro (hero / habilidades) */
+    body.on-dark #cursor-dot {
+      background: var(--sage);
+      mix-blend-mode: normal;
+    }
+    /* quando está magnetizado num elemento clicável */
+    body.cursor-mag #cursor-dot {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      background: rgba(103,5,39,0.12);
+      border: 1.5px solid rgba(103,5,39,0.35);
+    }
+    body.on-dark.cursor-mag #cursor-dot {
+      background: rgba(187,215,152,0.12);
+      border-color: rgba(187,215,152,0.4);
+    }
+    @media (pointer: coarse) {
+      #cursor-dot { display: none; }
+      body { cursor: auto; }
+    }
+
+    /* ═══════════════════════════════════════════
+       PROGRESS BAR
+    ═══════════════════════════════════════════ */
+    #progress-bar {
+      position: fixed; top: 68px; left: 0; z-index: 199;
+      height: 2px; width: 0%;
+      background: linear-gradient(90deg, var(--wine-light), var(--sage));
+      transition: width 0.08s linear;
+    }
+
+    /* ═══════════════════════════════════════════
+       SCROLL REVEAL
+    ═══════════════════════════════════════════ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(44px);
+      transition: opacity 0.85s cubic-bezier(0.16,1,0.3,1),
+                  transform 0.85s cubic-bezier(0.16,1,0.3,1);
+    }
+    .reveal.reveal--left  { transform: translateX(-52px); }
+    .reveal.reveal--right { transform: translateX(52px); }
+    .reveal.reveal--scale { transform: scale(0.91); }
+    .reveal.is-visible    { opacity: 1; transform: none; }
+    .reveal-d1 { transition-delay: 0.08s; }
+    .reveal-d2 { transition-delay: 0.16s; }
+    .reveal-d3 { transition-delay: 0.24s; }
+    .reveal-d4 { transition-delay: 0.32s; }
+    .reveal-d5 { transition-delay: 0.40s; }
+    .reveal-d6 { transition-delay: 0.48s; }
+
+    /* ═══════════════════════════════════════════
+       NAV
+    ═══════════════════════════════════════════ */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 56px;
+      height: 68px;
+      background: rgba(103,5,39,0.96);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(187,215,152,0.08);
+      transition: box-shadow 0.3s;
+    }
+    nav.scrolled { box-shadow: 0 4px 32px rgba(0,0,0,0.35); }
+
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      color: var(--sage);
+      font-size: 1.25rem;
+      letter-spacing: 3px;
+      font-weight: 600;
+    }
+    .nav-center { display: flex; gap: 36px; list-style: none; }
+    .nav-center a {
+      color: rgba(255,255,255,0.6);
+      text-decoration: none;
+      font-size: 0.72rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-weight: 500;
+      position: relative;
+      padding-bottom: 2px;
+      transition: color 0.25s;
+    }
+    .nav-center a::after {
+      content: '';
+      position: absolute; left: 0; bottom: -2px;
+      height: 1px; width: 0;
+      background: var(--sage);
+      transition: width 0.3s;
+    }
+    .nav-center a:hover,
+    .nav-center a.active { color: var(--sage); }
+    .nav-center a.active::after,
+    .nav-center a:hover::after { width: 100%; }
+
+    .nav-right { display: flex; align-items: center; gap: 16px; display: none; }
+
+
+    /* ═══════════════════════════════════════════
+       HERO
+    ═══════════════════════════════════════════ */
+    .hero {
+      min-height: 100vh;
+      background: var(--wine);
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      align-items: center;
+      padding: 140px 80px 100px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Parallax decorative circles */
+    .hero-deco {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      will-change: transform;
+    }
+    .hero-deco-1 {
+      width: 620px; height: 620px;
+      top: -170px; right: -170px;
+      border: 1px solid rgba(187,215,152,0.07);
+    }
+    .hero-deco-2 {
+      width: 420px; height: 420px;
+      top: -70px; right: -70px;
+      border: 1px solid rgba(187,215,152,0.05);
+      background: radial-gradient(circle, rgba(187,215,152,0.04) 0%, transparent 70%);
+    }
+    .hero-deco-3 {
+      width: 300px; height: 300px;
+      bottom: -90px; left: 40%;
+      background: radial-gradient(circle, rgba(187,215,152,0.06) 0%, transparent 70%);
+    }
+
+    .hero-accent-line {
+      width: 48px; height: 1px;
+      background: var(--sage);
+      margin-bottom: 28px;
+    }
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: rgba(187,215,152,0.1);
+      border: 1px solid rgba(187,215,152,0.25);
+      color: var(--sage);
+      font-size: 0.68rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      padding: 8px 18px;
+      border-radius: 100px;
+      margin-bottom: 28px;
+    }
+    .hero-tag-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--sage);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%,100% { opacity:1; transform:scale(1); }
+      50%      { opacity:.5; transform:scale(.7); }
+    }
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3rem, 5.5vw, 5rem);
+      color: #fff;
+      line-height: 1.05;
+      margin-bottom: 12px;
+      letter-spacing: -1px;
+    }
+    .hero h1 em { font-style: italic; color: var(--sage); }
+
+    .hero-subtitle {
+      font-size: 0.88rem;
+      color: rgba(255,255,255,0.5);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+      font-weight: 400;
+    }
+    .hero-desc {
+      font-size: 1rem;
+      color: rgba(255,255,255,0.7);
+      max-width: 460px;
+      line-height: 1.85;
+      margin-bottom: 40px;
+      font-weight: 300;
+    }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 24px; }
+
+    .btn-hero-primary {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: var(--sage);
+      color: var(--wine);
+      padding: 14px 28px;
+      border-radius: 100px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-decoration: none;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+      border: 2px solid var(--sage);
+    }
+    .btn-hero-primary:hover {
+      background: transparent;
+      color: var(--sage);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 32px rgba(187,215,152,0.2);
+    }
+    .btn-hero-primary svg { width: 14px; height: 14px; }
+
+    .hero-contacts { display: flex; flex-wrap: wrap; gap: 12px; }
+    .contact-chip {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.75);
+      padding: 10px 18px;
+      border-radius: 100px;
+      font-size: 0.8rem;
+      text-decoration: none;
+      transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+    }
+    .contact-chip:hover {
+      background: var(--sage);
+      color: var(--wine);
+      border-color: var(--sage);
+      transform: translateY(-2px);
+    }
+
+    /* Hero right card */
+    .hero-visual {
+      display: flex; justify-content: center; align-items: center;
+      position: relative; z-index: 2;
+    }
+    .hero-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(187,215,152,0.14);
+      border-radius: 28px;
+      padding: 44px;
+      backdrop-filter: blur(20px);
+      max-width: 360px; width: 100%;
+    }
+    .hero-card-label {
+      font-size: 0.66rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .stat-item {
+      text-align: center;
+      padding: 24px 12px;
+      background: rgba(187,215,152,0.06);
+      border-radius: 18px;
+      border: 1px solid rgba(187,215,152,0.1);
+      transition: all 0.3s;
+    }
+    .stat-item:hover {
+      background: rgba(187,215,152,0.12);
+      transform: translateY(-3px);
+    }
+    .stat-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2rem;
+      color: var(--sage);
+      font-weight: 700;
+      display: block;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .stat-label {
+      font-size: 0.66rem;
+      color: rgba(255,255,255,0.4);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+
+    /* ═══════════════════════════════════════════
+       SECTION SHARED
+    ═══════════════════════════════════════════ */
+    section { padding: 110px 80px; }
+
+    .section-label {
+      font-size: 0.66rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--wine);
+      font-weight: 600;
+      margin-bottom: 14px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .section-label::before {
+      content: '';
+      display: block;
+      width: 28px; height: 1px;
+      background: var(--wine);
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.2rem, 3.5vw, 3rem);
+      color: var(--text);
+      line-height: 1.15;
+      margin-bottom: 56px;
+      letter-spacing: -0.5px;
+    }
+    .section-title span { color: var(--wine); }
+
+    /* ═══════════════════════════════════════════
+       SOBRE
+    ═══════════════════════════════════════════ */
+    #sobre {
+      background: var(--surface);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 96px;
+      align-items: center;
+    }
+    .about-text p {
+      color: var(--text-muted);
+      line-height: 1.95;
+      margin-bottom: 22px;
+      font-size: 0.97rem;
+    }
+    .about-quote {
+      position: relative;
+      background: var(--wine);
+      color: rgba(255,255,255,0.9);
+      padding: 40px 36px 36px;
+      border-radius: 24px;
+      font-size: 1rem;
+      line-height: 1.8;
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      overflow: hidden;
+    }
+    .about-quote::before {
+      content: '\201C';
+      font-family: 'Playfair Display', serif;
+      font-size: 8rem;
+      color: var(--sage);
+      position: absolute;
+      top: -28px; left: 16px;
+      line-height: 1;
+      opacity: 0.22;
+    }
+    .about-quote-author {
+      margin-top: 20px;
+      font-family: 'Inter', sans-serif;
+      font-style: normal;
+      font-size: 0.72rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--sage);
+      font-weight: 500;
+    }
+
+    /* ═══════════════════════════════════════════
+       PROJETOS
+    ═══════════════════════════════════════════ */
+    #projetos {
+      background: var(--surface);
+      padding: 110px 80px;
+    }
+
+    /* Tabs */
+    .proj-tabs {
+      display: flex;
+      gap: 4px;
+      background: var(--border);
+      border-radius: 100px;
+      padding: 4px;
+      width: fit-content;
+      margin-bottom: 48px;
+    }
+    .proj-tab {
+      background: transparent;
+      border: none;
+      cursor: none;
+      padding: 10px 28px;
+      border-radius: 100px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+    }
+    .proj-tab.active {
+      background: var(--wine);
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(103,5,39,0.25);
+    }
+    .proj-tab:not(.active):hover { color: var(--text); }
+
+    /* Panel */
+    .proj-panel { display: none; }
+    .proj-panel.active { display: block; }
+
+    .proj-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 32px;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+    }
+    .proj-meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      flex-shrink: 0;
+    }
+    .proj-tag {
+      background: var(--sage-light);
+      color: var(--wine);
+      font-size: 0.68rem;
+      padding: 5px 14px;
+      border-radius: 100px;
+      font-weight: 600;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+    }
+    .proj-desc {
+      font-size: 0.92rem;
+      color: var(--text-muted);
+      line-height: 1.75;
+      max-width: 640px;
+    }
+
+    /* Asymmetric grid */
+    .proj-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: auto;
+      gap: 12px;
+    }
+    .proj-item {
+      position: relative;
+      overflow: hidden;
+      border-radius: 16px;
+      background: var(--border);
+      aspect-ratio: 3/4;
+      cursor: none;
+    }
+    .proj-item--tall {
+      grid-row: span 2;
+      aspect-ratio: unset;
+    }
+    .proj-item--wide {
+      grid-column: span 2;
+      aspect-ratio: 16/9;
+    }
+    .proj-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.7s cubic-bezier(0.16,1,0.3,1);
+    }
+    .proj-item:hover img {
+      transform: scale(1.06);
+    }
+    .proj-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(103,5,39,0.75) 0%, transparent 55%);
+      display: flex;
+      align-items: flex-end;
+      padding: 20px 20px;
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+    .proj-item:hover .proj-overlay {
+      opacity: 1;
+    }
+    .proj-overlay span {
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.9);
+      letter-spacing: 0.5px;
+      font-weight: 500;
+    }
+
+    /* Lightbox */
+    #lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 5000;
+      background: rgba(0,0,0,0.92);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+      backdrop-filter: blur(8px);
+    }
+    #lightbox.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+    #lightbox img {
+      max-width: 90vw;
+      max-height: 88vh;
+      object-fit: contain;
+      border-radius: 12px;
+      transform: scale(0.92);
+      transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+    }
+    #lightbox.open img {
+      transform: scale(1);
+    }
+    #lightbox-close {
+      position: absolute;
+      top: 24px; right: 28px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: rgba(255,255,255,0.8);
+      font-size: 1.2rem;
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      cursor: none;
+      transition: all 0.2s;
+    }
+    #lightbox-close:hover {
+      background: var(--wine);
+      border-color: var(--wine);
+      color: #fff;
+    }
+    #lightbox-caption {
+      position: absolute;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.5);
+      letter-spacing: 1px;
+      text-align: center;
+    }
+
+    @media (max-width: 960px) {
+      #projetos { padding: 80px 36px; }
+      .proj-grid { grid-template-columns: 1fr 1fr; }
+      .proj-item--tall { grid-row: span 1; aspect-ratio: 3/4; }
+      .proj-item--wide { grid-column: span 2; }
+    }
+    @media (max-width: 560px) {
+      .proj-grid { grid-template-columns: 1fr; }
+      .proj-item--wide { grid-column: span 1; aspect-ratio: 3/4; }
+    }
+
+    /* ═══════════════════════════════════════════
+       MÉTRICAS (nova seção)
+    ═══════════════════════════════════════════ */
+    #metricas {
+      background: var(--bg);
+      padding: 80px 80px;
+    }
+    .metricas-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+    }
+    .metrica-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 40px 28px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+    }
+    .metrica-card::before {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--wine), var(--sage));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.5s cubic-bezier(0.16,1,0.3,1);
+    }
+    .metrica-card:hover { transform: translateY(-6px); box-shadow: 0 20px 48px rgba(103,5,39,0.1); }
+    .metrica-card:hover::before { transform: scaleX(1); }
+
+    .metrica-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 3.2rem;
+      font-weight: 700;
+      color: var(--wine);
+      line-height: 1;
+      margin-bottom: 8px;
+      display: block;
+    }
+    .metrica-suffix {
+      font-size: 1.8rem;
+      color: var(--sage-dark);
+    }
+    .metrica-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+      margin-top: 8px;
+      font-weight: 500;
+    }
+    .metrica-desc {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-top: 6px;
+      opacity: 0.7;
+    }
+
+    /* ═══════════════════════════════════════════
+       EXPERIÊNCIA
+    ═══════════════════════════════════════════ */
+    #experiencia {
+      background: var(--bg);
+      position: relative;
+    }
+    #experiencia::before {
+      content: 'EXP';
+      position: absolute;
+      right: 64px; top: 80px;
+      font-family: 'Playfair Display', serif;
+      font-size: 9rem;
+      font-weight: 700;
+      color: rgba(103,5,39,0.04);
+      letter-spacing: -4px;
+      pointer-events: none;
+      user-select: none;
+    }
+    .timeline { position: relative; max-width: 860px; }
+    .timeline-track {
+      position: absolute;
+      left: 18px; top: 8px; bottom: 8px;
+      width: 1px;
+      background: linear-gradient(to bottom, var(--wine) 0%, var(--sage) 100%);
+      opacity: 0.3;
+    }
+    .timeline-item {
+      padding-left: 64px;
+      margin-bottom: 64px;
+      position: relative;
+    }
+    .timeline-item:last-child { margin-bottom: 0; }
+    .timeline-dot {
+      position: absolute;
+      left: 10px; top: 8px;
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: var(--wine);
+      border: 2px solid var(--sage);
+      box-shadow: 0 0 0 4px rgba(187,215,152,0.1);
+      transition: box-shadow 0.3s;
+    }
+    .timeline-item:hover .timeline-dot { box-shadow: 0 0 0 10px rgba(187,215,152,0.15); }
+    .timeline-date {
+      font-size: 0.7rem; letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--wine); font-weight: 600;
+      margin-bottom: 10px;
+    }
+    .timeline-company {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem; color: var(--text);
+      margin-bottom: 4px; letter-spacing: -0.5px;
+    }
+    .timeline-role {
+      font-size: 0.85rem; color: var(--text-muted);
+      margin-bottom: 20px; font-weight: 400;
+    }
+    .timeline-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+    .tag {
+      background: var(--sage-light);
+      color: var(--wine);
+      font-size: 0.66rem; padding: 5px 14px;
+      border-radius: 100px; font-weight: 600;
+      letter-spacing: 0.8px; text-transform: uppercase;
+    }
+    .timeline-bullets { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .timeline-bullets li {
+      color: var(--text-muted); font-size: 0.9rem;
+      padding-left: 22px; position: relative; line-height: 1.7;
+    }
+    .timeline-bullets li::before {
+      content: '';
+      position: absolute; left: 0; top: 11px;
+      width: 6px; height: 1px; background: var(--wine);
+    }
+
+    /* ═══════════════════════════════════════════
+       HABILIDADES — com barras animadas
+    ═══════════════════════════════════════════ */
+    #habilidades {
+      background: var(--dark);
+      position: relative; overflow: hidden;
+    }
+    #habilidades::before {
+      content: '';
+      position: absolute;
+      top: -200px; right: -200px;
+      width: 600px; height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(103,5,39,0.45) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    #habilidades .section-label { color: var(--sage); }
+    #habilidades .section-label::before { background: var(--sage); }
+    #habilidades .section-title { color: #fff; }
+    #habilidades .section-title span { color: var(--sage); }
+
+    .skills-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      position: relative; z-index: 2;
+    }
+
+    /* Pills grid — left */
+    .skills-pills-col { display: flex; flex-direction: column; gap: 20px; }
+    .skill-pill-group {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 20px;
+      padding: 28px 32px;
+      transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+    }
+    .skill-pill-group:hover {
+      background: rgba(187,215,152,0.05);
+      border-color: rgba(187,215,152,0.18);
+      transform: translateX(4px);
+    }
+    .skill-pill-group-num {
+      font-size: 0.66rem; color: rgba(187,215,152,0.35);
+      letter-spacing: 2px; margin-bottom: 16px;
+    }
+    .skill-pill-group h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem; color: #fff;
+      margin-bottom: 16px;
+    }
+    .skill-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+    .skill-pill {
+      background: rgba(187,215,152,0.08);
+      color: rgba(187,215,152,0.75);
+      font-size: 0.72rem; padding: 6px 14px;
+      border-radius: 100px;
+      border: 1px solid rgba(187,215,152,0.14);
+      transition: all 0.2s;
+    }
+    .skill-pill:hover {
+      background: rgba(187,215,152,0.16);
+      color: var(--sage);
+    }
+
+    /* Bars — right */
+    .skills-bars-col { display: flex; flex-direction: column; gap: 24px; }
+    .skill-bar-item {}
+    .skill-bar-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 10px;
+    }
+    .skill-bar-name {
+      font-size: 0.82rem; color: rgba(255,255,255,0.8);
+      font-weight: 500; letter-spacing: 0.3px;
+    }
+    .skill-bar-pct {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.88rem; color: var(--sage);
+    }
+    .skill-bar-track {
+      height: 4px;
+      background: rgba(255,255,255,0.07);
+      border-radius: 100px;
+      overflow: hidden;
+    }
+    .skill-bar-fill {
+      height: 100%;
+      border-radius: 100px;
+      background: linear-gradient(90deg, var(--wine-light), var(--sage));
+      width: 0%;
+      transition: width 1.2s cubic-bezier(0.16,1,0.3,1);
+    }
+
+    /* ═══════════════════════════════════════════
+       FORMAÇÃO
+    ═══════════════════════════════════════════ */
+    #formacao { background: var(--surface); }
+    .edu-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 20px; }
+    .edu-card {
+      border: 1px solid var(--border);
+      border-radius: 22px; padding: 36px;
+      position: relative; overflow: hidden;
+      background: var(--surface);
+      transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+    }
+    .edu-card:hover {
+      border-color: rgba(187,215,152,0.5);
+      box-shadow: 0 12px 40px rgba(103,5,39,0.08);
+      transform: translateY(-4px);
+    }
+    .edu-card-bar {
+      position: absolute; top: 0; left: 0; width: 100%; height: 3px;
+      background: linear-gradient(90deg, var(--wine), var(--sage));
+      transform: scaleX(0); transform-origin: left;
+      transition: transform 0.5s cubic-bezier(0.16,1,0.3,1);
+    }
+    .edu-card:hover .edu-card-bar { transform: scaleX(1); }
+    .edu-card-number {
+      position: absolute; right: 28px; top: 28px;
+      font-family: 'Playfair Display', serif;
+      font-size: 3.5rem; color: rgba(103,5,39,0.05);
+      font-weight: 700; line-height: 1;
+    }
+    .edu-type {
+      font-size: 0.66rem; letter-spacing: 2.5px;
+      text-transform: uppercase; color: var(--wine);
+      font-weight: 600; margin-bottom: 14px;
+    }
+    .edu-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem; color: var(--text);
+      margin-bottom: 8px; line-height: 1.3;
+    }
+    .edu-institution { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px; }
+    .edu-date { font-size: 0.75rem; color: var(--sage-dark); font-weight: 600; }
+
+    /* ═══════════════════════════════════════════
+       CONTATO
+    ═══════════════════════════════════════════ */
+    #contato {
+      background: var(--sage);
+      text-align: center;
+      padding: 120px 80px;
+      position: relative; overflow: hidden;
+    }
+    #contato::before {
+      content: '';
+      position: absolute; top: -150px; left: 50%;
+      transform: translateX(-50%);
+      width: 500px; height: 500px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(103,5,39,0.08) 0%, transparent 70%);
+    }
+    #contato .section-label { color: var(--wine); justify-content: center; }
+    #contato .section-label::before { background: var(--wine); }
+    #contato .section-title { color: var(--wine); margin-bottom: 20px; }
+    .contato-desc {
+      color: rgba(103,5,39,0.7); font-size: 1rem;
+      margin-bottom: 52px;
+      max-width: 480px; margin-left: auto; margin-right: auto;
+      line-height: 1.8;
+    }
+    .cta-buttons { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; }
+    .btn-primary {
+      background: var(--wine); color: #fff;
+      padding: 16px 40px; border-radius: 100px;
+      font-size: 0.82rem; font-weight: 600;
+      text-decoration: none; letter-spacing: 1.5px;
+      text-transform: uppercase; border: 2px solid var(--wine);
+      transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+    }
+    .btn-primary:hover {
+      background: transparent; color: var(--wine);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 32px rgba(103,5,39,0.2);
+    }
+    .btn-secondary {
+      background: transparent; color: var(--wine);
+      padding: 16px 40px; border-radius: 100px;
+      font-size: 0.82rem; font-weight: 600;
+      text-decoration: none; letter-spacing: 1.5px;
+      text-transform: uppercase; border: 2px solid var(--wine);
+      transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+    }
+    .btn-secondary:hover {
+      background: var(--wine); color: #fff;
+      transform: translateY(-3px);
+      box-shadow: 0 12px 32px rgba(103,5,39,0.2);
+    }
+
+    /* ═══════════════════════════════════════════
+       FOOTER
+    ═══════════════════════════════════════════ */
+    footer {
+      background: var(--dark);
+      padding: 36px 80px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .footer-logo {
+      font-family: 'Playfair Display', serif;
+      color: var(--sage); font-size: 1.1rem; letter-spacing: 2px;
+    }
+    footer p { color: rgba(255,255,255,0.3); font-size: 0.75rem; letter-spacing: 1px; }
+
+    /* ═══════════════════════════════════════════
+       RESPONSIVE
+    ═══════════════════════════════════════════ */
+    /* ── HAMBURGER ── */
+    .nav-burger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      width: 36px; height: 36px;
+      cursor: none;
+      background: none;
+      border: none;
+      padding: 4px;
+      z-index: 210;
+    }
+    .nav-burger span {
+      display: block;
+      height: 1.5px;
+      background: rgba(255,255,255,0.8);
+      border-radius: 2px;
+      transition: all 0.35s cubic-bezier(0.16,1,0.3,1);
+      transform-origin: center;
+    }
+    .nav-burger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .nav-burger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .nav-burger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+    /* Mobile drawer */
+    .nav-drawer {
+      display: none;
+      position: fixed;
+      inset: 0; top: 68px;
+      background: rgba(103,5,39,0.98);
+      backdrop-filter: blur(16px);
+      z-index: 190;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 40px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s cubic-bezier(0.16,1,0.3,1);
+    }
+    .nav-drawer.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .nav-drawer a {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      color: rgba(255,255,255,0.75);
+      text-decoration: none;
+      letter-spacing: 2px;
+      transition: color 0.2s;
+    }
+    .nav-drawer a:hover { color: var(--sage); }
+
+    /* ── TABLET ── */
+    @media (max-width: 1024px) {
+      .metricas-grid  { grid-template-columns: repeat(2,1fr); }
+      .skills-layout  { grid-template-columns: 1fr; }
+      .proj-grid      { grid-template-columns: repeat(2,1fr); }
+      .proj-item--tall { grid-row: span 1; aspect-ratio: 3/4; }
+      .proj-item--wide { grid-column: span 2; aspect-ratio: 16/9; }
+      section         { padding: 80px 48px; }
+      .hero           { padding: 130px 48px 80px; }
+    }
+
+    /* ── MOBILE ── */
+    @media (max-width: 768px) {
+      /* cursor off on touch */
+      body            { cursor: auto; }
+      #cursor-dot     { display: none; }
+
+      /* nav */
+      nav             { padding: 0 20px; }
+      .nav-center     { display: none; }
+      .nav-right      { display: none !important; }
+      .nav-burger     { display: flex; }
+      .nav-drawer     { display: flex; }
+
+      /* hero */
+      .hero {
+        grid-template-columns: 1fr;
+        padding: 110px 24px 64px;
+        min-height: 100svh;
+      }
+      .hero-visual    { display: none; }
+      .hero h1        { font-size: clamp(2.6rem, 10vw, 3.6rem); }
+      .hero-desc      { font-size: 0.92rem; }
+      .btn-hero-primary { padding: 12px 22px; font-size: 0.76rem; }
+      .contact-chip   { font-size: 0.76rem; padding: 9px 14px; }
+
+      /* sections */
+      section         { padding: 64px 24px; }
+      #sobre          { grid-template-columns: 1fr; gap: 36px; padding: 64px 24px; }
+      #projetos       { padding: 64px 24px; }
+      #metricas       { padding: 48px 24px; }
+      #habilidades    { padding: 64px 24px; }
+      #formacao       { padding: 64px 24px; }
+      #contato        { padding: 80px 24px; }
+
+      /* section titles */
+      .section-title  { font-size: clamp(1.8rem, 7vw, 2.4rem); margin-bottom: 36px; }
+
+      /* grids */
+      .metricas-grid  { grid-template-columns: 1fr 1fr; gap: 12px; }
+      .edu-grid       { grid-template-columns: 1fr; }
+      .skills-layout  { grid-template-columns: 1fr; gap: 28px; }
+      .skills-bars-col { gap: 18px; }
+
+      /* projetos */
+      .proj-tabs      { width: 100%; }
+      .proj-tab       { flex: 1; padding: 10px 12px; font-size: 0.7rem; text-align: center; }
+      .proj-grid      { grid-template-columns: 1fr; gap: 10px; }
+      .proj-item--tall,
+      .proj-item--wide { grid-row: span 1; grid-column: span 1; aspect-ratio: 4/3; }
+
+      /* timeline */
+      .timeline-item  { padding-left: 44px; }
+      .timeline-company { font-size: 1.3rem; }
+
+      /* metrica numbers */
+      .metrica-number { font-size: 2.4rem; }
+
+      /* footer */
+      footer          { flex-direction: column; gap: 16px; text-align: center; padding: 28px 24px; }
+
+      /* experience bg text */
+      #experiencia::before { display: none; }
+
+      /* hero deco */
+      .hero-deco-1,
+      .hero-deco-2    { width: 300px; height: 300px; top: -80px; right: -80px; }
+    }
+
+    /* ── SMALL MOBILE ── */
+    @media (max-width: 380px) {
+      .hero h1        { font-size: 2.4rem; }
+      .metricas-grid  { grid-template-columns: 1fr 1fr; }
+      .metrica-card   { padding: 24px 16px; }
+      .metrica-number { font-size: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div id="cursor-dot"></div>
+
+<!-- PROGRESS BAR -->
+<div id="progress-bar"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-logo">VPB</div>
+  <ul class="nav-center">
+    <li><a href="#sobre">Sobre</a></li>
+    <li><a href="#projetos">Projetos</a></li>
+    <li><a href="#metricas">Resultados</a></li>
+    <li><a href="#experiencia">Experiência</a></li>
+    <li><a href="#habilidades">Habilidades</a></li>
+    <li><a href="#formacao">Formação</a></li>
+    <li><a href="#contato">Contato</a></li>
+  </ul>
+  <button class="nav-burger" id="nav-burger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- Mobile drawer -->
+<div class="nav-drawer" id="nav-drawer">
+  <a href="#sobre"       class="drawer-link">Sobre</a>
+  <a href="#projetos"    class="drawer-link">Projetos</a>
+  <a href="#metricas"    class="drawer-link">Resultados</a>
+  <a href="#experiencia" class="drawer-link">Experiência</a>
+  <a href="#habilidades" class="drawer-link">Habilidades</a>
+  <a href="#formacao"    class="drawer-link">Formação</a>
+  <a href="#contato"     class="drawer-link">Contato</a>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="inicio">
+  <div class="hero-deco hero-deco-1" data-parallax="0.015"></div>
+  <div class="hero-deco hero-deco-2" data-parallax="0.03"></div>
+  <div class="hero-deco hero-deco-3" data-parallax="0.02"></div>
+
+  <div class="hero-text">
+    <div class="hero-accent-line reveal is-visible"></div>
+    <div class="hero-tag reveal reveal-d1 is-visible">
+      <span class="hero-tag-dot"></span>
+      Analista de Marketing
+    </div>
+    <h1 class="reveal reveal-d2 is-visible">
+      Victoria<br/><em>Peixoto</em><br/>Bicudo
+    </h1>
+    <p class="hero-subtitle reveal reveal-d3 is-visible">
+      Marketing de Influência &amp; Campanhas Integradas
+    </p>
+    <p class="hero-desc reveal reveal-d4 is-visible">
+      Profissional focada em criar conexões reais entre marcas e pessoas — unindo estratégia, dados e narrativa para gerar impacto direto em resultados de varejo.
+    </p>
+    <div class="hero-actions reveal reveal-d5 is-visible">
+      <a class="btn-hero-primary" href="Currículo Profissional VICTORIA.pdf" download>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        Baixar Currículo
+      </a>
+    </div>
+    <div class="hero-contacts reveal reveal-d6 is-visible">
+      <a class="contact-chip" href="tel:11941510328">(11) 94151-0328</a>
+      <a class="contact-chip" href="mailto:victoriapeixotobicudo@gmail.com">victoriapeixotobicudo@gmail.com</a>
+    </div>
+  </div>
+
+  <div class="hero-visual">
+    <div class="hero-card reveal reveal--right is-visible">
+      <p class="hero-card-label">Perfil em Números</p>
+      <div class="stat-grid">
+        <div class="stat-item">
+          <span class="stat-number">3+</span>
+          <span class="stat-label">Anos na área</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">360°</span>
+          <span class="stat-label">Campanhas</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">UV</span>
+          <span class="stat-label">Line — atual</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">ROI</span>
+          <span class="stat-label">Foco em dados</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOBRE -->
+<section id="sobre">
+  <div class="about-text">
+    <p class="section-label reveal">Quem sou</p>
+    <h2 class="section-title reveal reveal-d1">Estratégia que<br/><span>conecta</span> marcas<br/>a pessoas</h2>
+    <p class="reveal reveal-d2">Sou Analista de Marketing especializada em Marketing de Influência e Campanhas Integradas. Atuo de forma estratégica e operacional, garantindo coerência criativa entre branding, influenciadores e canais próprios.</p>
+    <p class="reveal reveal-d3">Meu perfil analítico me permite transformar métricas em decisões — e minha facilidade de comunicação intersetorial faz a ponte entre agências, fornecedores e os times internos de criação e produto.</p>
+    <p class="reveal reveal-d4">Tenho experiência comprovada em ativações de varejo, gestão de creators e desenvolvimento de mecânicas de conversão que impactam diretamente o faturamento.</p>
+  </div>
+  <div class="reveal reveal--right reveal-d2">
+    <div class="about-quote">
+      Possuo expertise em curadoria de influenciadores, construção de narrativas de campanha e análise de performance — visando sempre o crescimento orgânico e o impacto direto nos resultados.
+      <p class="about-quote-author">Victoria Peixoto Bicudo</p>
+    </div>
+  </div>
+</section>
+
+<!-- PROJETOS -->
+<section id="projetos">
+  <p class="section-label reveal">Casos de Sucesso</p>
+  <h2 class="section-title reveal reveal-d1">Projetos<br/><span>em Destaque</span></h2>
+
+  <!-- Tabs -->
+  <div class="proj-tabs reveal reveal-d2">
+    <button class="proj-tab active" data-tab="copa">Campanha Copa do Mundo</button>
+    <button class="proj-tab" data-tab="volei">Vôlei de Praia</button>
+  </div>
+
+  <!-- Copa do Mundo -->
+  <div class="proj-panel active" id="tab-copa">
+    <div class="proj-header reveal reveal-d3">
+      <div class="proj-meta">
+        <span class="proj-tag">Marketing de Influência</span>
+        <span class="proj-tag">Campanha 360°</span>
+        <span class="proj-tag">UV.LINE</span>
+      </div>
+      <p class="proj-desc">Campanha integrada para a Copa do Mundo com curadoria de influenciadores e estratégia de marketing de afiliados — cada creator operou com cupom de desconto exclusivo, permitindo avaliação precisa de ROI por meio da taxa de conversão individual. A ação conectou branding, engajamento e resultado direto de vendas em tempo real.</p>
+    </div>
+    <div class="proj-grid reveal reveal-d4">
+      <div class="proj-item proj-item--tall">
+        <img src="Campanha com Influeciadores de Copa do Mundo - UV.LINE/_GPF4191 copy.jpg" alt="Campanha Copa do Mundo UV.LINE" loading="lazy" />
+        <div class="proj-overlay"><span>Ação com influenciadora — Ipanema</span></div>
+      </div>
+      <div class="proj-item">
+        <img src="Campanha com Influeciadores de Copa do Mundo - UV.LINE/_GPF4237 copy.jpg" alt="Campanha Copa do Mundo UV.LINE" loading="lazy" />
+        <div class="proj-overlay"><span>Editorial de produto — Dois Irmãos</span></div>
+      </div>
+      <div class="proj-item">
+        <img src="Campanha com Influeciadores de Copa do Mundo - UV.LINE/_GPF4726 copy.jpg" alt="Campanha Copa do Mundo UV.LINE" loading="lazy" />
+        <div class="proj-overlay"><span>Retrato editorial — Calçadão Copacabana</span></div>
+      </div>
+      <div class="proj-item proj-item--wide">
+        <img src="Campanha com Influeciadores de Copa do Mundo - UV.LINE/_GPF4537 copy.jpg" alt="Campanha Copa do Mundo UV.LINE" loading="lazy" />
+        <div class="proj-overlay"><span>Lifestyle — Praia de Ipanema</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vôlei de Praia -->
+  <div class="proj-panel" id="tab-volei">
+    <div class="proj-header reveal reveal-d3">
+      <div class="proj-meta">
+        <span class="proj-tag">Influencer Sport</span>
+        <span class="proj-tag">Conteúdo Atlético</span>
+        <span class="proj-tag">UV.LINE</span>
+      </div>
+      <p class="proj-desc">Ação de Dia das Mães com foco na mulher: a narrativa girou em torno da vida da atleta olímpica dentro e fora das quadras — mãe e esportista de alta performance. A proteção UV ganhou significado real ao ser posicionada como aliada do dia a dia de quem dá o máximo em cada jogo e ainda chega em casa para ser mãe. Uma estratégia que uniu propósito, emoção e relevância de produto.</p>
+    </div>
+    <div class="proj-grid reveal reveal-d4">
+      <div class="proj-item proj-item--tall">
+        <img src="FOTOS VOLÊI DE PRAIA- UV LINE/FOTOS VOLÊI DE PRAIA/UV_LINE_0649.jpg" alt="Vôlei de Praia UV.LINE" loading="lazy" />
+        <div class="proj-overlay"><span>Saque — Pedra da Gávea</span></div>
+      </div>
+      <div class="proj-item">
+        <img src="FOTOS VOLÊI DE PRAIA- UV LINE/FOTOS VOLÊI DE PRAIA/Solberg Editado-2.jpg" alt="Vôlei de Praia UV.LINE" loading="lazy" />
+        <div class="proj-overlay"><span>Editorial — Dois Irmãos</span></div>
+      </div>
+      <div class="proj-item">
+        <img src="FOTOS VOLÊI DE PRAIA- UV LINE/FOTOS VOLÊI DE PRAIA/Solberg Editado-7.jpg" alt="Vôlei de Praia UV.LINE" loading="lazy" />
+        <div class="proj-overlay"><span>Close editorial — produto em destaque</span></div>
+      </div>
+      <div class="proj-item proj-item--wide">
+        <img src="FOTOS VOLÊI DE PRAIA- UV LINE/FOTOS VOLÊI DE PRAIA/UV_LINE_0610.jpg" alt="Vôlei de Praia UV.LINE" loading="lazy" />
+        <div class="proj-overlay"><span>Defesa em mergulho — ação real</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MÉTRICAS -->
+<section id="metricas">
+  <div class="metricas-grid">
+    <div class="metrica-card reveal reveal-d1">
+      <span class="metrica-number">
+        <span class="count" data-target="3">0</span><span class="metrica-suffix">+</span>
+      </span>
+      <p class="metrica-label">Anos de Experiência</p>
+      <p class="metrica-desc">Trajetória contínua em marketing digital</p>
+    </div>
+    <div class="metrica-card reveal reveal-d2">
+      <span class="metrica-number">
+        <span class="count" data-target="360">0</span><span class="metrica-suffix">°</span>
+      </span>
+      <p class="metrica-label">Campanhas Integradas</p>
+      <p class="metrica-desc">Visão completa do funil — branding ao varejo</p>
+    </div>
+    <div class="metrica-card reveal reveal-d3">
+      <span class="metrica-number">
+        <span class="count" data-target="4">0</span><span class="metrica-suffix">+</span>
+      </span>
+      <p class="metrica-label">Certificações</p>
+      <p class="metrica-desc">Formação contínua em marketing e design</p>
+    </div>
+    <div class="metrica-card reveal reveal-d4">
+      <span class="metrica-number">
+        <span class="count" data-target="100">0</span><span class="metrica-suffix">%</span>
+      </span>
+      <p class="metrica-label">Foco em Resultado</p>
+      <p class="metrica-desc">KPIs e ROI como norte de cada decisão</p>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIÊNCIA -->
+<section id="experiencia">
+  <p class="section-label reveal">Trajetória</p>
+  <h2 class="section-title reveal reveal-d1">Experiência<br/><span>Profissional</span></h2>
+  <div class="timeline">
+    <div class="timeline-track"></div>
+
+    <div class="timeline-item reveal reveal-d2">
+      <div class="timeline-dot"></div>
+      <p class="timeline-date">Jan 2026 — Atual</p>
+      <p class="timeline-company">UV.LINE</p>
+      <p class="timeline-role">Assistente de Marketing Pleno · Roupas e Artigos com Proteção UV</p>
+      <div class="timeline-tags">
+        <span class="tag">Campanhas 360°</span>
+        <span class="tag">Influencer Marketing</span>
+        <span class="tag">Conversão &amp; Varejo</span>
+        <span class="tag">ROI &amp; KPIs</span>
+      </div>
+      <ul class="timeline-bullets">
+        <li>Planejamento e coordenação de campanhas 360º com unidade criativa entre branding, influenciadores e canais próprios.</li>
+        <li>Curadoria, negociação e gestão de contratos com criadores de conteúdo focando em narrativas autênticas e alinhadas aos valores da marca.</li>
+        <li>Desenvolvimento de mecânicas de vendas — cupons, ativações e lives — para canais físico e digital, monitorando impacto direto no faturamento.</li>
+        <li>Gestão de cronogramas e fluxos internos, atuando como ponte entre agências, fornecedores e times de criação e produto.</li>
+        <li>Monitoramento de KPIs de performance e social media, transformando métricas em relatórios estratégicos de otimização.</li>
+      </ul>
+    </div>
+
+    <div class="timeline-item reveal reveal-d3">
+      <div class="timeline-dot"></div>
+      <p class="timeline-date">Jan 2025 — Dez 2025</p>
+      <p class="timeline-company">UV.LINE</p>
+      <p class="timeline-role">Assistente de Marketing</p>
+      <div class="timeline-tags">
+        <span class="tag">Social Media</span>
+        <span class="tag">Copywriting</span>
+        <span class="tag">Seeding</span>
+        <span class="tag">Storytelling</span>
+      </div>
+      <ul class="timeline-bullets">
+        <li>Execução do cronograma de redes sociais com foco em crescimento de audiência, engajamento e manutenção do tom de voz da marca.</li>
+        <li>Apoio operacional em campanhas de seeding e envio de press kits, garantindo logística e experiência dos parceiros com o produto.</li>
+        <li>Redação de legendas, roteiros para vídeos curtos e peças de e-mail marketing com foco em storytelling e educação sobre a tecnologia UV.</li>
+        <li>Gestão do relacionamento com seguidores e análise de sentimento nos canais digitais da marca.</li>
+        <li>Suporte na produção executiva de ações presenciais e lançamentos de coleção.</li>
+      </ul>
+    </div>
+
+    <div class="timeline-item reveal reveal-d4">
+      <div class="timeline-dot"></div>
+      <p class="timeline-date">Jan 2024 — Dez 2024</p>
+      <p class="timeline-company">UV.LINE</p>
+      <p class="timeline-role">Estagiária de Marketing</p>
+      <div class="timeline-tags">
+        <span class="tag">Produção</span>
+        <span class="tag">Conteúdo Orgânico</span>
+        <span class="tag">Eventos</span>
+      </div>
+      <ul class="timeline-bullets">
+        <li>Assistência operacional em sessões de fotos e campanhas — organização de acervo, logística e conferência de produtos.</li>
+        <li>Apoio na postagem de conteúdos em redes sociais e suporte logístico para envios de seeding a influenciadores.</li>
+        <li>Participação na montagem e rotinas operacionais de eventos de coleção e organização dos materiais promocionais.</li>
+        <li>Escrita de textos curtos para e-mail marketing e redes sociais seguindo as diretrizes de comunicação da marca.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- HABILIDADES -->
+<section id="habilidades">
+  <p class="section-label reveal">Competências</p>
+  <h2 class="section-title reveal reveal-d1">Habilidades &amp;<br/><span>Ferramentas</span></h2>
+
+  <div class="skills-layout">
+    <!-- Pills -->
+    <div class="skills-pills-col">
+      <div class="skill-pill-group reveal reveal-d2">
+        <p class="skill-pill-group-num">01</p>
+        <h3>Hard Skills</h3>
+        <div class="skill-pills">
+          <span class="skill-pill">Campanhas 360°</span>
+          <span class="skill-pill">Marketing de Influência</span>
+          <span class="skill-pill">Branding</span>
+          <span class="skill-pill">Copywriting</span>
+          <span class="skill-pill">Gestão de Redes Sociais</span>
+          <span class="skill-pill">Análise de KPIs e ROI</span>
+          <span class="skill-pill">Estratégias de Conversão</span>
+        </div>
+      </div>
+      <div class="skill-pill-group reveal reveal-d3">
+        <p class="skill-pill-group-num">02</p>
+        <h3>Ferramentas</h3>
+        <div class="skill-pills">
+          <span class="skill-pill">Meta Business Suite</span>
+          <span class="skill-pill">Google Analytics</span>
+          <span class="skill-pill">CRM &amp; Automação</span>
+          <span class="skill-pill">Canva</span>
+          <span class="skill-pill">Pacote Office</span>
+          <span class="skill-pill">Monitoramento de Influenciadores</span>
+        </div>
+      </div>
+      <div class="skill-pill-group reveal reveal-d4">
+        <p class="skill-pill-group-num">03</p>
+        <h3>Soft Skills</h3>
+        <div class="skill-pills">
+          <span class="skill-pill">Pensamento Estratégico</span>
+          <span class="skill-pill">Gestão de Projetos</span>
+          <span class="skill-pill">Comunicação Intersetorial</span>
+          <span class="skill-pill">Perfil Analítico</span>
+          <span class="skill-pill">Autonomia</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bars -->
+    <div class="skills-bars-col reveal reveal--right reveal-d2">
+      <div class="skill-bar-item">
+        <div class="skill-bar-header">
+          <span class="skill-bar-name">Marketing de Influência</span>
+          <span class="skill-bar-pct">95%</span>
+        </div>
+        <div class="skill-bar-track">
+          <div class="skill-bar-fill" data-width="95"></div>
+        </div>
+      </div>
+      <div class="skill-bar-item">
+        <div class="skill-bar-header">
+          <span class="skill-bar-name">Campanhas 360°</span>
+          <span class="skill-bar-pct">90%</span>
+        </div>
+        <div class="skill-bar-track">
+          <div class="skill-bar-fill" data-width="90"></div>
+        </div>
+      </div>
+      <div class="skill-bar-item">
+        <div class="skill-bar-header">
+          <span class="skill-bar-name">Copywriting &amp; Storytelling</span>
+          <span class="skill-bar-pct">88%</span>
+        </div>
+        <div class="skill-bar-track">
+          <div class="skill-bar-fill" data-width="88"></div>
+        </div>
+      </div>
+      <div class="skill-bar-item">
+        <div class="skill-bar-header">
+          <span class="skill-bar-name">Gestão de Redes Sociais</span>
+          <span class="skill-bar-pct">92%</span>
+        </div>
+        <div class="skill-bar-track">
+          <div class="skill-bar-fill" data-width="92"></div>
+        </div>
+      </div>
+      <div class="skill-bar-item">
+        <div class="skill-bar-header">
+          <span class="skill-bar-name">Análise de KPIs &amp; ROI</span>
+          <span class="skill-bar-pct">85%</span>
+        </div>
+        <div class="skill-bar-track">
+          <div class="skill-bar-fill" data-width="85"></div>
+        </div>
+      </div>
+      <div class="skill-bar-item">
+        <div class="skill-bar-header">
+          <span class="skill-bar-name">Meta Business Suite</span>
+          <span class="skill-bar-pct">87%</span>
+        </div>
+        <div class="skill-bar-track">
+          <div class="skill-bar-fill" data-width="87"></div>
+        </div>
+      </div>
+      <div class="skill-bar-item">
+        <div class="skill-bar-header">
+          <span class="skill-bar-name">Google Analytics</span>
+          <span class="skill-bar-pct">80%</span>
+        </div>
+        <div class="skill-bar-track">
+          <div class="skill-bar-fill" data-width="80"></div>
+        </div>
+      </div>
+      <div class="skill-bar-item">
+        <div class="skill-bar-header">
+          <span class="skill-bar-name">Gestão de Projetos</span>
+          <span class="skill-bar-pct">90%</span>
+        </div>
+        <div class="skill-bar-track">
+          <div class="skill-bar-fill" data-width="90"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FORMAÇÃO -->
+<section id="formacao">
+  <p class="section-label reveal">Educação</p>
+  <h2 class="section-title reveal reveal-d1">Formação<br/><span>Acadêmica</span></h2>
+  <div class="edu-grid">
+    <div class="edu-card reveal reveal-d2">
+      <div class="edu-card-bar"></div>
+      <span class="edu-card-number">01</span>
+      <p class="edu-type">Graduação</p>
+      <p class="edu-title">Marketing</p>
+      <p class="edu-institution">Universidade Anhembi Morumbi</p>
+      <p class="edu-date">Concluída em Dez 2025</p>
+    </div>
+    <div class="edu-card reveal reveal-d3">
+      <div class="edu-card-bar"></div>
+      <span class="edu-card-number">02</span>
+      <p class="edu-type">Curso</p>
+      <p class="edu-title">Fundamentos Básicos de Design Gráfico</p>
+      <p class="edu-institution">Fundação Bradesco</p>
+      <p class="edu-date">Mai 2024</p>
+    </div>
+    <div class="edu-card reveal reveal-d4">
+      <div class="edu-card-bar"></div>
+      <span class="edu-card-number">03</span>
+      <p class="edu-type">Curso Autoinstrucional</p>
+      <p class="edu-title">Redes Sociais: Conceitos e Organização</p>
+      <p class="edu-institution">FGV — Fundação Getúlio Vargas</p>
+      <p class="edu-date">Jan 2025</p>
+    </div>
+    <div class="edu-card reveal reveal-d5">
+      <div class="edu-card-bar"></div>
+      <span class="edu-card-number">04</span>
+      <p class="edu-type">Curso</p>
+      <p class="edu-title">Criação de Copyright</p>
+      <p class="edu-institution">Rock University</p>
+      <p class="edu-date">Mar 2024</p>
+    </div>
+  </div>
+</section>
+
+<!-- CONTATO -->
+<section id="contato">
+  <p class="section-label reveal">Vamos conversar</p>
+  <h2 class="section-title reveal reveal-d1">Pronta para o<br/>próximo desafio</h2>
+  <p class="contato-desc reveal reveal-d2">
+    Aberta a novas oportunidades em Marketing de Influência,<br/>Campanhas Integradas e Estratégia Digital.
+  </p>
+  <div class="cta-buttons reveal reveal-d3">
+    <a class="btn-primary" href="mailto:victoriapeixotobicudo@gmail.com">Enviar e-mail</a>
+    <a class="btn-secondary" href="tel:11941510328">Ligar agora</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Victoria Peixoto Bicudo</div>
+  <p>© 2026 · Analista de Marketing</p>
+</footer>
+
+<!-- ═══════════════════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════════════════ -->
+<script>
+(function () {
+  /* ── CURSOR MAGNÉTICO ── */
+  const dot = document.getElementById('cursor-dot');
+  let mx = -200, my = -200;
+  let cx = -200, cy = -200;          // posição atual do cursor (interpolada)
+  let magnetTarget = null;
+  let isOnDark = false;
+
+  // Elementos que ativam o magnetismo
+  const magnetEls = document.querySelectorAll(
+    'a, button, #theme-toggle, .stat-item, .metrica-card, .edu-card, .skill-pill-group, .contact-chip, .btn-hero-primary'
+  );
+
+  // Seções com fundo escuro — cursor muda de cor
+  const darkSections = ['inicio', 'habilidades'];
+
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+
+  // Detecta se o cursor está sobre seção escura
+  const darkObs = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        isOnDark = darkSections.includes(entry.target.id);
+        document.body.classList.toggle('on-dark', isOnDark);
+      }
+    });
+  }, { threshold: 0.5 });
+  darkSections.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) darkObs.observe(el);
+  });
+
+  // Magnetismo: ao entrar num elemento, o cursor é atraído para o centro
+  magnetEls.forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      magnetTarget = el;
+      document.body.classList.add('cursor-mag');
+      el.style.transition = 'transform 0.4s cubic-bezier(0.16,1,0.3,1)';
+    });
+    el.addEventListener('mousemove', e => {
+      if (!magnetTarget) return;
+      const rect = el.getBoundingClientRect();
+      const relX = e.clientX - (rect.left + rect.width  / 2);
+      const relY = e.clientY - (rect.top  + rect.height / 2);
+      // Elemento se move levemente em direção ao mouse (efeito magnético)
+      el.style.transform = `translate(${relX * 0.22}px, ${relY * 0.22}px)`;
+    });
+    el.addEventListener('mouseleave', () => {
+      magnetTarget = null;
+      document.body.classList.remove('cursor-mag');
+      el.style.transform = '';
+    });
+  });
+
+  // Loop de animação: cursor segue o mouse com inércia
+  (function loop() {
+    if (magnetTarget) {
+      // Snap suave para o centro do elemento magnetizado
+      const rect = magnetTarget.getBoundingClientRect();
+      const tx = rect.left + rect.width  / 2;
+      const ty = rect.top  + rect.height / 2;
+      cx += (tx - cx) * 0.18;
+      cy += (ty - cy) * 0.18;
+    } else {
+      // Segue o mouse normalmente com lag
+      cx += (mx - cx) * 0.14;
+      cy += (my - cy) * 0.14;
+    }
+    dot.style.left = cx + 'px';
+    dot.style.top  = cy + 'px';
+    requestAnimationFrame(loop);
+  })();
+
+  /* ── HAMBURGER MENU ── */
+  const burger = document.getElementById('nav-burger');
+  const drawer = document.getElementById('nav-drawer');
+
+  burger.addEventListener('click', () => {
+    const isOpen = drawer.classList.toggle('open');
+    burger.classList.toggle('open', isOpen);
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+  });
+
+  document.querySelectorAll('.drawer-link').forEach(link => {
+    link.addEventListener('click', () => {
+      drawer.classList.remove('open');
+      burger.classList.remove('open');
+      document.body.style.overflow = '';
+    });
+  });
+
+  /* ── LIGHTBOX ── */
+  const lightbox    = document.createElement('div');
+  lightbox.id       = 'lightbox';
+  lightbox.innerHTML = `<button id="lightbox-close">&#10005;</button><img id="lightbox-img" src="" alt="" /><p id="lightbox-caption"></p>`;
+  document.body.appendChild(lightbox);
+
+  const lbImg     = document.getElementById('lightbox-img');
+  const lbCaption = document.getElementById('lightbox-caption');
+  const lbClose   = document.getElementById('lightbox-close');
+
+  document.querySelectorAll('.proj-item').forEach(item => {
+    item.addEventListener('click', () => {
+      const img     = item.querySelector('img');
+      const caption = item.querySelector('.proj-overlay span');
+      lbImg.src          = img.src;
+      lbImg.alt          = img.alt;
+      lbCaption.textContent = caption ? caption.textContent : '';
+      lightbox.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    });
+  });
+
+  lbClose.addEventListener('click', closeLightbox);
+  lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+  function closeLightbox() {
+    lightbox.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  /* ── PROJECT TABS ── */
+  document.querySelectorAll('.proj-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      const target = tab.dataset.tab;
+      document.querySelectorAll('.proj-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.proj-panel').forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('tab-' + target).classList.add('active');
+      // Re-trigger reveal for newly shown items
+      document.querySelectorAll('#tab-' + target + ' .reveal:not(.is-visible)').forEach(el => {
+        revealObs.observe(el);
+      });
+    });
+  });
+
+  /* ── PROGRESS BAR + NAV SCROLL ── */
+  const progressBar = document.getElementById('progress-bar');
+  const nav         = document.getElementById('nav');
+
+  window.addEventListener('scroll', () => {
+    const st  = window.scrollY;
+    const dh  = document.documentElement.scrollHeight - window.innerHeight;
+    progressBar.style.width = (st / dh * 100) + '%';
+    nav.classList.toggle('scrolled', st > 40);
+  }, { passive: true });
+
+  /* ── PARALLAX HERO CIRCLES ── */
+  const parallaxEls = document.querySelectorAll('[data-parallax]');
+  document.addEventListener('mousemove', e => {
+    const cx = window.innerWidth  / 2;
+    const cy = window.innerHeight / 2;
+    const dx = e.clientX - cx;
+    const dy = e.clientY - cy;
+    parallaxEls.forEach(el => {
+      const s = parseFloat(el.dataset.parallax);
+      el.style.transform = `translate(${dx * s}px, ${dy * s}px)`;
+    });
+  });
+
+  /* ── SCROLL REVEAL ── */
+  const revealEls = document.querySelectorAll('.reveal:not(.is-visible)');
+  const revealObs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        revealObs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  revealEls.forEach(el => revealObs.observe(el));
+
+  /* ── COUNTER ANIMATION ── */
+  function animateCount(el, target, duration) {
+    const start = performance.now();
+    const isLarge = target > 10;
+    (function update(now) {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      const ease = 1 - Math.pow(1 - progress, 4);
+      el.textContent = isLarge
+        ? Math.round(ease * target)
+        : (ease * target).toFixed(0);
+      if (progress < 1) requestAnimationFrame(update);
+      else el.textContent = target;
+    })(start);
+  }
+
+  const counterObs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const el = entry.target;
+        animateCount(el, parseInt(el.dataset.target), 1600);
+        counterObs.unobserve(el);
+      }
+    });
+  }, { threshold: 0.5 });
+
+  document.querySelectorAll('.count').forEach(el => counterObs.observe(el));
+
+  /* ── SKILL BARS ── */
+  const barObs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.querySelectorAll('.skill-bar-fill').forEach(bar => {
+          setTimeout(() => { bar.style.width = bar.dataset.width + '%'; }, 200);
+        });
+        barObs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.2 });
+
+  const skillsSection = document.getElementById('habilidades');
+  if (skillsSection) barObs.observe(skillsSection);
+
+  /* ── ACTIVE NAV LINK ── */
+  const sections  = document.querySelectorAll('section[id]');
+  const navLinks  = document.querySelectorAll('.nav-center a');
+  const secObs    = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(a => a.classList.remove('active'));
+        const link = document.querySelector(`.nav-center a[href="#${entry.target.id}"]`);
+        if (link) link.classList.add('active');
+      }
+    });
+  }, { threshold: 0.4 });
+
+  sections.forEach(s => secObs.observe(s));
+
+})();
+</script>
+</body>
+</html>
