@@ -430,6 +430,41 @@
       color: var(--sage);
       font-weight: 500;
     }
+    .about-services {
+      margin-top: 24px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 32px 36px;
+    }
+    .about-services-label {
+      font-size: 0.66rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--wine);
+      font-weight: 600;
+      margin-bottom: 18px;
+    }
+    .about-services-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .about-services-list li {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      padding-left: 20px;
+      position: relative;
+      line-height: 1.5;
+    }
+    .about-services-list li::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 10px;
+      width: 8px; height: 1px;
+      background: var(--wine);
+    }
 
     /* ═══════════════════════════════════════════
        PROJETOS
@@ -1170,7 +1205,7 @@
       Marketing de Influência &amp; Campanhas Integradas
     </p>
     <p class="hero-desc reveal reveal-d4 is-visible">
-      Profissional focada em criar conexões reais entre marcas e pessoas — unindo estratégia, dados e narrativa para gerar impacto direto em resultados de varejo.
+      Construo campanhas que conectam influência, branding e vendas — com impacto direto no resultado.
     </p>
     <div class="hero-actions reveal reveal-d5 is-visible">
       <a class="btn-hero-primary" href="Currículo Profissional VICTORIA.pdf" download>
@@ -1216,14 +1251,27 @@
   <div class="about-text">
     <p class="section-label reveal">Quem sou</p>
     <h2 class="section-title reveal reveal-d1">Estratégia que<br/><span>conecta</span> marcas<br/>a pessoas</h2>
-    <p class="reveal reveal-d2">Sou Analista de Marketing especializada em Marketing de Influência e Campanhas Integradas. Atuo de forma estratégica e operacional, garantindo coerência criativa entre branding, influenciadores e canais próprios.</p>
-    <p class="reveal reveal-d3">Meu perfil analítico me permite transformar métricas em decisões — e minha facilidade de comunicação intersetorial faz a ponte entre agências, fornecedores e os times internos de criação e produto.</p>
-    <p class="reveal reveal-d4">Tenho experiência comprovada em ativações de varejo, gestão de creators e desenvolvimento de mecânicas de conversão que impactam diretamente o faturamento.</p>
+    <p class="reveal reveal-d2">Sou profissional de marketing especializada em campanhas integradas e marketing de influência, com foco em transformar narrativas criativas em resultados reais de negócio.</p>
+    <p class="reveal reveal-d3">Atuo conectando influenciadores, branding e canais de venda, garantindo consistência entre posicionamento de marca e performance.</p>
+    <p class="reveal reveal-d4">Tenho experiência na gestão completa de campanhas — da estratégia à execução — incluindo curadoria de creators, desenvolvimento de mecânicas de conversão e análise de dados para otimização contínua.</p>
+    <p class="reveal reveal-d5">Meu trabalho é construir campanhas que não apenas engajam, mas convertem.</p>
   </div>
   <div class="reveal reveal--right reveal-d2">
     <div class="about-quote">
-      Possuo expertise em curadoria de influenciadores, construção de narrativas de campanha e análise de performance — visando sempre o crescimento orgânico e o impacto direto nos resultados.
+      Meu diferencial está em integrar criatividade e performance. Não trabalho apenas com conteúdo ou influência — trabalho com estratégia que conecta marca, audiência e resultado de vendas.
       <p class="about-quote-author">Victoria Peixoto Bicudo</p>
+    </div>
+
+    <div class="about-services reveal reveal-d4">
+      <p class="about-services-label">O que eu faço</p>
+      <ul class="about-services-list">
+        <li>Estratégia de campanhas 360º</li>
+        <li>Marketing de influência (end-to-end)</li>
+        <li>Curadoria e gestão de creators</li>
+        <li>Planejamento de conteúdo e narrativa</li>
+        <li>Estratégias de conversão para varejo</li>
+        <li>Análise de performance e otimização</li>
+      </ul>
     </div>
   </div>
 </section>
@@ -1236,7 +1284,7 @@
   <!-- Tabs -->
   <div class="proj-tabs reveal reveal-d2">
     <button class="proj-tab active" data-tab="copa">Campanha Copa do Mundo</button>
-    <button class="proj-tab" data-tab="volei">Vôlei de Praia</button>
+    <button class="proj-tab" data-tab="volei">Dia das Mães</button>
   </div>
 
   <!-- Copa do Mundo -->
@@ -1247,7 +1295,7 @@
         <span class="proj-tag">Campanha 360°</span>
         <span class="proj-tag">UV.LINE</span>
       </div>
-      <p class="proj-desc">Campanha integrada para a Copa do Mundo com curadoria de influenciadores e estratégia de marketing de afiliados — cada creator operou com cupom de desconto exclusivo, permitindo avaliação precisa de ROI por meio da taxa de conversão individual. A ação conectou branding, engajamento e resultado direto de vendas em tempo real.</p>
+      <p class="proj-desc">Campanha integrada para a Copa do Mundo estruturada com estratégia de marketing de afiliados e curadoria de influenciadores. Cada creator operou com cupons exclusivos, permitindo mensuração individual de performance e análise precisa de ROI por creator. A ação conectou branding e conversão, transformando engajamento em resultado direto de vendas com acompanhamento em tempo real.</p>
     </div>
     <div class="proj-grid reveal reveal-d4">
       <div class="proj-item proj-item--tall">
@@ -1277,7 +1325,7 @@
         <span class="proj-tag">Conteúdo Atlético</span>
         <span class="proj-tag">UV.LINE</span>
       </div>
-      <p class="proj-desc">Ação de Dia das Mães com foco na mulher: a narrativa girou em torno da vida da atleta olímpica dentro e fora das quadras — mãe e esportista de alta performance. A proteção UV ganhou significado real ao ser posicionada como aliada do dia a dia de quem dá o máximo em cada jogo e ainda chega em casa para ser mãe. Uma estratégia que uniu propósito, emoção e relevância de produto.</p>
+      <p class="proj-desc">Campanha de Dia das Mães com foco na ressignificação da mulher em múltiplos papéis. A narrativa acompanhou a rotina de uma atleta olímpica dentro e fora das quadras — equilibrando alta performance no esporte e maternidade. A proteção UV foi posicionada como aliada funcional do dia a dia, conectando produto, contexto real e identificação emocional. Uma estratégia que integrou propósito, storytelling e relevância comercial.</p>
     </div>
     <div class="proj-grid reveal reveal-d4">
       <div class="proj-item proj-item--tall">
@@ -1568,9 +1616,9 @@
 <!-- CONTATO -->
 <section id="contato">
   <p class="section-label reveal">Vamos conversar</p>
-  <h2 class="section-title reveal reveal-d1">Pronta para o<br/>próximo desafio</h2>
+  <h2 class="section-title reveal reveal-d1">Vamos construir campanhas<br/>que <span>geram resultado?</span></h2>
   <p class="contato-desc reveal reveal-d2">
-    Aberta a novas oportunidades em Marketing de Influência,<br/>Campanhas Integradas e Estratégia Digital.
+    Entre em contato para projetos, parcerias ou oportunidades.
   </p>
   <div class="cta-buttons reveal reveal-d3">
     <a class="btn-primary" href="mailto:victoriapeixotobicudo@gmail.com">Enviar e-mail</a>
