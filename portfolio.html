@@ -1003,6 +1003,12 @@
       color: var(--sage); font-size: 1.1rem; letter-spacing: 2px;
     }
     footer p { color: rgba(255,255,255,0.3); font-size: 0.75rem; letter-spacing: 1px; }
+    .footer-social { display: flex; gap: 16px; align-items: center; }
+    .footer-social a {
+      color: rgba(255,255,255,0.3);
+      transition: color 0.25s;
+    }
+    .footer-social a:hover { color: var(--sage); }
 
     /* ═══════════════════════════════════════════
        RESPONSIVE
@@ -1218,6 +1224,14 @@
     <div class="hero-contacts reveal reveal-d6 is-visible">
       <a class="contact-chip" href="tel:11941510328">(11) 94151-0328</a>
       <a class="contact-chip" href="mailto:victoriapeixotobicudo@gmail.com">victoriapeixotobicudo@gmail.com</a>
+      <a class="contact-chip" href="https://www.instagram.com/vihbicudo?igsh=Z21neHgyazh1dWU5&utm_source=qr" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+        @vihbicudo
+      </a>
+      <a class="contact-chip" href="https://www.linkedin.com/in/victoria-peixoto-bicudo-619a06230" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+        LinkedIn
+      </a>
     </div>
   </div>
 
@@ -1623,12 +1637,22 @@
   <div class="cta-buttons reveal reveal-d3">
     <a class="btn-primary" href="mailto:victoriapeixotobicudo@gmail.com">Enviar e-mail</a>
     <a class="btn-secondary" href="tel:11941510328">Ligar agora</a>
+    <a class="btn-secondary" href="https://www.instagram.com/vihbicudo?igsh=Z21neHgyazh1dWU5&utm_source=qr" target="_blank" rel="noopener">Instagram</a>
+    <a class="btn-secondary" href="https://www.linkedin.com/in/victoria-peixoto-bicudo-619a06230" target="_blank" rel="noopener">LinkedIn</a>
   </div>
 </section>
 
 <!-- FOOTER -->
 <footer>
   <div class="footer-logo">Victoria Peixoto Bicudo</div>
+  <div class="footer-social">
+    <a href="https://www.instagram.com/vihbicudo?igsh=Z21neHgyazh1dWU5&utm_source=qr" target="_blank" rel="noopener" aria-label="Instagram">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+    </a>
+    <a href="https://www.linkedin.com/in/victoria-peixoto-bicudo-619a06230" target="_blank" rel="noopener" aria-label="LinkedIn">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+    </a>
+  </div>
   <p>© 2026 · Analista de Marketing</p>
 </footer>
 
